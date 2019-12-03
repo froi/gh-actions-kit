@@ -10,14 +10,11 @@ const outdent = require('outdent');
 function createIssueCommentFromActions({ actions, specialInstructions, mentions=[] }) {
     let actionsText = '';
     let specialInstructionsText = '';
+    let mentionsText = formatMentions(mentions);
 
     actions.forEach(action => {
         actionsText += `- ${action} \n`
     });
-
-    mentions.forEach(mention => {
-        mentionsText = `@${mention} `
-    })
 
     let issueText = outdent`
     # Issue proccessed
@@ -41,7 +38,7 @@ function createIssueCommentFromActions({ actions, specialInstructions, mentions=
     ${specialInstructionsText}
     ---
 
-    **cc:** ${mentionsText}
+    ${mentionsText}
     `
 }
 
@@ -54,9 +51,10 @@ function createIssueCommentFromActions({ actions, specialInstructions, mentions=
  * @param {string} options.repo
  * @param {string} options.teamName
  */
-function getUserInvitedCommentBody({username, organization, role='member', repo=null,teamName=null}) {
+function getUserInvitedCommentBody({username, organization, role='member', repo=null, teamName=null, mentions=[]}) {
     let teamText = '';
     let repoText = '';
+    let mentionsText = formatMentions(mentions);
 
     if(teamName) {
         teamText = outdent`
@@ -77,7 +75,7 @@ function getUserInvitedCommentBody({username, organization, role='member', repo=
 
     ${teamText}
 
-    **cc:** @froi @elstudio @stphnwlkr
+    ${mentionsText}
     `;
 }
 
@@ -109,6 +107,19 @@ async function paginate({ client, fn, fnOptions }) {
         throw error;
     }
 }
+
+/**
+ * Format a list of names for use in GitHub Issue markdown
+ * returns an empty string if no mentions
+ * 
+ * @param {Array} mentions List of GitHub usernames to mention
+ * @returns {String} formatted list of usernames or an empty stringda
+ */
+function formatMentions(mentions=[]) {
+  mentions = mentions.map(username => `@${username}`);
+  return `**cc:** ${mentions.join(' ')}`
+}
+
 module.exports = {
     createIssueCommentFromActions,
     getUserInvitedCommentBody,
