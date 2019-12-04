@@ -4,12 +4,13 @@ const outdent = require('outdent');
  * Create a GitHub issue comment from a list of actions
  * @param {Object} options
  * @param {Array<string>} options.actions A list of action strings to include in the issue comment
- * @param {string} specialInstructions Any special instructions that might have been included in the original GitHub issue
- * @param {Array<string>} mentions A list of GitHub usernames to mention in the comment.
+ * @param {string} options.specialInstructions Any special instructions that might have been included in the original GitHub issue
+ * @param {Array<string>} options.mentions A list of GitHub usernames to mention in the comment.
  */
 function createIssueCommentFromActions({ actions, specialInstructions, mentions=[] }) {
     let actionsText = '';
     let specialInstructionsText = '';
+    let mentionsText = '';
 
     actions.forEach(action => {
         actionsText += `- ${action} \n`
@@ -27,7 +28,7 @@ function createIssueCommentFromActions({ actions, specialInstructions, mentions=
     ${actionsText}
     `
 
-    if(specialInstructions && specialInstructions.trim().lenght > 0) {
+    if(specialInstructions && specialInstructions.trim().length > 0) {
       specialInstructionsText = outdent`
       ## Special Instructions
 
@@ -54,7 +55,13 @@ function createIssueCommentFromActions({ actions, specialInstructions, mentions=
  * @param {string} options.repo
  * @param {string} options.teamName
  */
-function getUserInvitedCommentBody({username, organization, role='member', repo=null,teamName=null}) {
+function getUserInvitedCommentBody({
+    username,
+    organization,
+    role='member',
+    repo=null,
+    teamName=null}) {
+
     let teamText = '';
     let repoText = '';
 

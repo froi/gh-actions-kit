@@ -2,9 +2,15 @@
   "name": "gh-actions-kit",
   "version": "1.0.0",
   "description": "A small kit of helper funcitons for actions",
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "author": "Froilan Irizarry Rivera - @froi",
   "dependencies": {
     "outdent": "^0.7.0"
+  },
+  "devDependencies": {
+    "jest": "*",
+    "@octokit/rest": "^16.35.0"
   }
 }
